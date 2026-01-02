@@ -1,22 +1,3 @@
-# Allow build scripts to be referenced without being copied into the final image
-FROM scratch AS ctx
-COPY build /build
-COPY custom /custom
-
-## OCI Containers for Artwork, Branding, and Additional System Files
-## Following the @projectbluefin/distroless pattern, you can layer in additional
-## system files from OCI containers. These are commented out by default for the template.
-## Uncomment and customize as needed for your image.
-
-## Artwork and Branding from projectbluefin/common
-## This includes wallpapers, themes, and bluefin-specific branding
-# COPY --from=ghcr.io/projectbluefin/common:latest /system_files/bluefin /files/bluefin
-# COPY --from=ghcr.io/projectbluefin/common:latest /system_files/shared /files/shared
-
-## Homebrew system files from ublue-os/brew
-## This provides additional brew-related system integration
-# COPY --from=ghcr.io/ublue-os/brew:latest /system_files /files/brew
-
 ###############################################################################
 # PROJECT NAME CONFIGURATION
 ###############################################################################
@@ -34,17 +15,50 @@ COPY custom /custom
 # to maintain consistency.
 ###############################################################################
 
-# Base Image
-FROM ghcr.io/ublue-os/bluefin:stable@sha256:c9411d9909708d57d8e87c160a308a4a8c795764fb4beff344340755412b9178
+###############################################################################
+# MULTI-STAGE BUILD ARCHITECTURE
+###############################################################################
+# This Containerfile follows the Bluefin architecture pattern as implemented in
+# @projectbluefin/distroless. The architecture layers OCI containers together:
+#
+# 1. Context Stage (ctx) - Combines resources from:
+#    - Local build scripts and custom files
+#    - @ublue-os/base-main - Base system configuration
+#    - @projectbluefin/common - Desktop configuration shared with Aurora
+#    - @projectbluefin/branding - Branding assets
+#    - @ublue-os/artwork - Artwork shared with Aurora and Bazzite
+#    - @ublue-os/brew - Homebrew integration
+#
+# 2. Base Image Options:
+#    - ghcr.io/ublue-os/silverblue-main (Fedora-based, default)
+#    - quay.io/centos-bootc/centos-bootc:stream10 (CentOS-based)
+#
+# See: https://docs.projectbluefin.io/contributing/ for architecture diagram
+###############################################################################
 
-## Other possible base images include:
-# FROM ghcr.io/ublue-os/bazzite:latest
-# FROM ghcr.io/ublue-os/bluefin-nvidia:stable
-# 
-# ... and so on, here are more base images
-# Universal Blue Images: https://github.com/orgs/ublue-os/packages
-# Fedora base image: quay.io/fedora/fedora-bootc:41
-# CentOS base images: quay.io/centos-bootc/centos-bootc:stream10
+# Context stage - combine local and imported OCI container resources
+FROM scratch AS ctx
+
+COPY build /build
+COPY custom /custom
+# Copy from OCI containers to distinct subdirectories to avoid conflicts
+# Note: Renovate can automatically update these :latest tags to SHA-256 digests for reproducibility
+COPY --from=ghcr.io/ublue-os/base-main:latest /system_files /oci/base
+COPY --from=ghcr.io/projectbluefin/common:latest /system_files /oci/common
+COPY --from=ghcr.io/projectbluefin/branding:latest /system_files /oci/branding
+COPY --from=ghcr.io/ublue-os/artwork:latest /system_files /oci/artwork
+COPY --from=ghcr.io/ublue-os/brew:latest /system_files /oci/brew
+
+# Base Image - GNOME included
+FROM ghcr.io/ublue-os/silverblue-main:latest
+
+## Alternative base images, no desktop included (uncomment to use):
+# FROM ghcr.io/ublue-os/base-main:latest    
+# FROM quay.io/centos-bootc/centos-bootc:stream10
+
+## Alternative GNOME OS base image (uncomment to use):
+# FROM quay.io/gnome_infrastructure/gnome-build-meta:gnomeos-nightly
+
 
 ### /opt
 ## Some bootable images, like Fedora, have /opt symlinked to /var/opt, in order to
@@ -58,8 +72,14 @@ FROM ghcr.io/ublue-os/bluefin:stable@sha256:c9411d9909708d57d8e87c160a308a4a8c79
 # RUN rm /opt && mkdir /opt
 
 ### MODIFICATIONS
-## make modifications desired in your image and install packages by modifying the build scripts
-## the following RUN directive does all the things required to run scripts as recommended.
+## Make modifications desired in your image and install packages by modifying the build scripts.
+## The following RUN directive mounts the ctx stage which includes:
+##   - Local build scripts from /build
+##   - Local custom files from /custom
+##   - Files from @projectbluefin/common at /oci/common
+##   - Files from @projectbluefin/branding at /oci/branding
+##   - Files from @ublue-os/artwork at /oci/artwork
+##   - Files from @ublue-os/brew at /oci/brew
 ## Scripts are run in numerical order (10-build.sh, 20-example.sh, etc.)
 
 RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
