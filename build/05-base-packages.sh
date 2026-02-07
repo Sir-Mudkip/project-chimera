@@ -1,0 +1,108 @@
+#!/usr/bin/bash
+
+set -eoux pipefail
+
+###############################################################################
+# Main Build Script
+###############################################################################
+# This script follows the @ublue-os/bluefin pattern for build scripts.
+# It uses set -eoux pipefail for strict error handling and debugging.
+###############################################################################
+
+# Source helper functions
+# shellcheck source=/dev/null
+source /ctx/build/copr-helpers.sh
+
+echo "::group:: Copy Custom Files"
+
+# Consolidate Just Files
+mkdir -p /usr/share/ublue-os/just/
+find /ctx/custom/ujust -iname '*.just' -exec printf "\n\n" \; -exec cat {} \; >> /usr/share/ublue-os/just/60-custom.just
+
+echo "::endgroup::"
+
+echo "::group:: Install Packages"
+
+# Install packages using dnf5
+# Example: dnf5 install -y tmux
+
+# Base packages from Fedora repos - common to all versions
+# https://github.com/ublue-os/main/blob/main/packages.json
+FEDORA_PACKAGES=(
+    bash-color-prompt
+    fastfetch
+    gcc
+    gocryptfs
+    git
+    just
+    lm_sensors
+    make
+    neovim
+    python3-pip
+    ripgrep
+    stress-ng
+    syncthing
+    trash-cli
+    wireguard-tools
+    gum
+    tailscale
+    tmux
+    tcpdump
+    cockpit
+    cockpit-podman
+    cockpit-selinux
+    cockpit-machines
+    podman-machine
+    @virtualization
+    wireshark
+)
+
+# Install all Fedora packages (bulk - safe from COPR injection)
+echo "Installing ${#FEDORA_PACKAGES[@]} packages from Fedora repos..."
+dnf -y install "${FEDORA_PACKAGES[@]}"
+
+# Example using COPR with isolated pattern:
+# copr_install_isolated "ublue-os/staging" package-name
+
+# Packages to exclude - common to all versions
+EXCLUDED_PACKAGES=(
+    fedora-bookmarks
+    fedora-chromium-config
+    fedora-chromium-config-gnome
+    firefox
+    firefox-langpacks
+    gnome-extensions-app
+    gnome-software-rpm-ostree
+    podman-docker
+)
+
+# Remove excluded packages if they are installed
+if [[ "${#EXCLUDED_PACKAGES[@]}" -gt 0 ]]; then
+    readarray -t INSTALLED_EXCLUDED < <(rpm -qa --queryformat='%{NAME}\n' "${EXCLUDED_PACKAGES[@]}" 2>/dev/null || true)
+    if [[ "${#INSTALLED_EXCLUDED[@]}" -gt 0 ]]; then
+        dnf -y remove "${INSTALLED_EXCLUDED[@]}"
+    else
+        echo "No excluded packages found to remove."
+    fi
+fi
+
+# Flatpak
+echo "::group:: Flatpak Config"
+dnf install flatpak
+flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+echo "::endgroup::"
+
+# Gnome install
+echo "::group:: Installing gnome so it's 'just there'"
+dnf5 -y install \
+    gnome-shell \
+    gdm \
+    gnome-terminal \
+    gnome-system-monitor \
+    gnome-tweaks \
+    gnome-control-center \
+    nautilus \
+    NetworkManager-wifi \
+    NetworkManager-vpnc
+
+echo "::endgroup::"

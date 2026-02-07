@@ -16,14 +16,6 @@ source /ctx/build/copr-helpers.sh
 # Enable nullglob for all glob operations to prevent failures on empty matches
 shopt -s nullglob
 
-echo "::group:: Copy Bluefin Config from Common"
-
-# Copy just files from @projectbluefin/common (includes 00-entry.just which imports 60-custom.just)
-mkdir -p /usr/share/ublue-os/just/
-shopt -s nullglob
-cp -r /ctx/oci/common/bluefin/usr/share/ublue-os/just/* /usr/share/ublue-os/just/
-shopt -u nullglob
-
 echo "::endgroup::"
 
 echo "::group:: Copy Custom Files"
@@ -41,23 +33,27 @@ cp /ctx/custom/flatpaks/*.preinstall /etc/flatpak/preinstall.d/
 
 echo "::endgroup::"
 
-echo "::group:: Install Packages"
 
-# Install packages using dnf5
-# Example: dnf5 install -y tmux
+echo "::group:: Building Image..."
 
-# Example using COPR with isolated pattern:
-# copr_install_isolated "ublue-os/staging" package-name
 
-echo "::endgroup::"
+# User Setup
+/ctx/build/01-user-config.sh
 
-echo "::group:: System Configuration"
+# Install Packages
+/ctx/build/05-base-packages.sh
 
-# Enable/disable systemd services
-systemctl enable podman.socket
-# Example: systemctl mask unwanted-service
+# Pentesting Packages
+/ctx/build/10-burp-install.sh
 
-echo "::endgroup::"
+# Sys Config
+/ctx/build/20-system-config.sh
+
+# Clean Scripts
+/ctx/build/50-clean.sh
+
+# Validate Repos
+/ctx/build/55-validate-repos.sh
 
 # Restore default glob behavior
 shopt -u nullglob
