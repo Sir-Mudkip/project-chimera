@@ -86,10 +86,6 @@ if [[ "${#EXCLUDED_PACKAGES[@]}" -gt 0 ]]; then
     fi
 fi
 
-# Flatpak
-echo "::group:: Flatpak Config"
-dnf install flatpak
-flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 echo "::endgroup::"
 
 # Gnome install
@@ -97,7 +93,6 @@ echo "::group:: Installing gnome so it's 'just there'"
 dnf5 -y install \
     gnome-shell \
     gdm \
-    gnome-terminal \
     gnome-system-monitor \
     gnome-tweaks \
     gnome-control-center \
@@ -105,4 +100,11 @@ dnf5 -y install \
     NetworkManager-wifi \
     NetworkManager-vpnc
 
+# Flatpak
+echo "::group:: Flatpak Config"
+dnf install flatpak
+flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+flatpak install flathub app.devsuite.Ptyxis
+flatpak install flathub org.mozilla.firefox
+flatpak install flathub io.github.kolunmi.Bazaar
 echo "::endgroup::"
