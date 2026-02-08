@@ -2,9 +2,6 @@
 
 set -euox pipefail
 
-echo "Configuring Wireshark Usergroups"
-usermod -a -G wireshark pentest
-
 echo "Creating Pentesting User"
 useradd -m -G wheel -s /bin/bash pentest
 if [ -n "${PASSWORD_HASH:-}" ]; then

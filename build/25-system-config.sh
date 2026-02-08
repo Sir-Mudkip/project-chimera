@@ -37,20 +37,7 @@ echo "Disabling the location service"
 systemctl disable geoclue.service
 systemctl mask geoclue.service
 
-echo "Enable SSH"
-systemctl enable sshd.service
-systemctl start sshd.service
-
-echo "Enable RDP"
-systemctl enable xrdp.service
-systemctl enable xrdp-sesman.service
-systemctl start xrdp.service
-systemctl start xrdp-sesman.service
+echo "Configuring Wireshark Usergroups"
+usermod -a -G wireshark pentest
 
 echo "::endgroup::"
-
-echo "::group:: Cleanup"
-
-echo "::endgroup::"
-
-echo "Custom build complete!"

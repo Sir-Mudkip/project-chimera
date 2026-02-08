@@ -5,15 +5,6 @@
 ## Example application installation commands
 ## These are simplified examples adapted from Bluefin
 
-# Install all Brewfiles at once
-[group('Apps')]
-install-all-brew:
-    #!/usr/bin/env bash
-    echo "Installing all applications from Brewfiles..."
-    brew bundle --file /usr/share/ublue-os/homebrew/default.Brewfile
-    brew bundle --file /usr/share/ublue-os/homebrew/development.Brewfile
-    brew bundle --file /usr/share/ublue-os/homebrew/fonts.Brewfile
-
 # Install a Flatpak application from Flathub
 [group('Apps')]
 install-flatpak APP_ID:
