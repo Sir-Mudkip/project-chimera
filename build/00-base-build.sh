@@ -22,9 +22,9 @@ echo "::group:: Copy Custom Files"
 
 # Copy Brewfiles to standard location
 mkdir -p /usr/share/ublue-os/homebrew/
-cp /ctx/custom/brew/*.Brewfile /usr/share/ublue-os/homebrew/
 
 # Consolidate Just Files
+mkdir -p /usr/share/ublue-os/just
 find /ctx/custom/ujust -iname '*.just' -exec printf "\n\n" \; -exec cat {} \; >> /usr/share/ublue-os/just/60-custom.just
 
 # Copy Flatpak preinstall files
@@ -33,9 +33,7 @@ cp /ctx/custom/flatpaks/*.preinstall /etc/flatpak/preinstall.d/
 
 echo "::endgroup::"
 
-
 echo "::group:: Building Image..."
-
 
 # User Setup
 /ctx/build/01-user-config.sh
@@ -47,13 +45,13 @@ echo "::group:: Building Image..."
 /ctx/build/10-burp-install.sh
 
 # Sys Config
-/ctx/build/20-system-config.sh
+/ctx/build/25-system-config.sh
 
 # Clean Scripts
 /ctx/build/50-clean.sh
 
 # Validate Repos
-/ctx/build/55-validate-repos.sh
+/ctx/build/60-validate-repos.sh
 
 # Restore default glob behavior
 shopt -u nullglob

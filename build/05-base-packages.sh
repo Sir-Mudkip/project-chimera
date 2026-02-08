@@ -13,11 +13,18 @@ set -eoux pipefail
 # shellcheck source=/dev/null
 source /ctx/build/copr-helpers.sh
 
-echo "::group:: Copy Custom Files"
+# Install repos needed for EPEL and Tailscale
+# Install EPEL repository
+dnf install -y epel-release
 
-# Consolidate Just Files
-mkdir -p /usr/share/ublue-os/just/
-find /ctx/custom/ujust -iname '*.just' -exec printf "\n\n" \; -exec cat {} \; >> /usr/share/ublue-os/just/60-custom.just
+# Update package cache
+dnf update -y
+
+# Enable CRB (CodeReady Builder) for development packages
+dnf config-manager --set-enabled crb
+
+# For Tailscale, add their official repo
+dnf config-manager --add-repo https://pkgs.tailscale.com/stable/centos/10/tailscale.repo
 
 echo "::endgroup::"
 
@@ -30,6 +37,7 @@ echo "::group:: Install Packages"
 # https://github.com/ublue-os/main/blob/main/packages.json
 FEDORA_PACKAGES=(
     bash-color-prompt
+    curl
     fastfetch
     gcc
     gocryptfs
@@ -41,9 +49,8 @@ FEDORA_PACKAGES=(
     python3-pip
     ripgrep
     stress-ng
-    syncthing
-    trash-cli
     wireguard-tools
+    podman
     gum
     tailscale
     tmux
@@ -52,8 +59,6 @@ FEDORA_PACKAGES=(
     cockpit-podman
     cockpit-selinux
     cockpit-machines
-    podman-machine
-    @virtualization
     wireshark
 )
 
@@ -90,7 +95,7 @@ echo "::endgroup::"
 
 # Gnome install
 echo "::group:: Installing gnome so it's 'just there'"
-dnf5 -y install \
+dnf -y install \
     gnome-shell \
     gdm \
     gnome-system-monitor \
@@ -98,13 +103,10 @@ dnf5 -y install \
     gnome-control-center \
     nautilus \
     NetworkManager-wifi \
-    NetworkManager-vpnc
+    NetworkManager-openvpn-gnome
 
 # Flatpak
 echo "::group:: Flatpak Config"
-dnf install flatpak
+dnf install -y flatpak
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-flatpak install flathub app.devsuite.Ptyxis
-flatpak install flathub org.mozilla.firefox
-flatpak install flathub io.github.kolunmi.Bazaar
 echo "::endgroup::"

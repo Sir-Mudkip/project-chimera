@@ -18,11 +18,6 @@ install-flatpak APP_ID:
 install-vscode:
     ujust install-flatpak com.visualstudio.code
 
-# Firefox
-[group('Apps')]
-install-firefox:
-   ujust install-flatpak org.mozilla.firefox
-
 # Example: Install GIMP via Flatpak
 [group('Apps')]
 install-gimp:

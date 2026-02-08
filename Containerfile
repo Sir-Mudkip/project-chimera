@@ -20,10 +20,8 @@ FROM scratch AS ctx
 
 COPY build /build
 COPY custom /custom
-# Copy from OCI containers to distinct subdirectories to avoid conflicts
-# Note: Renovate can automatically update these :latest tags to SHA-256 digests for reproducibility
 
-FROM quay.io/centos-bootc/centos-bootc:stream10
+FROM quay.io/centos-bootc/centos-bootc:stream10 AS base
 
 ### /opt
 ## Some bootable images, like Fedora, have /opt symlinked to /var/opt, in order to
@@ -34,7 +32,7 @@ FROM quay.io/centos-bootc/centos-bootc:stream10
 ## Uncomment the following line if one desires to make /opt immutable and be able to be used
 ## by the package manager.
 
-RUN rm /opt && mkdir /opt
+RUN rm -rf /opt && mkdir /opt
 
 # Copy Homebrew files from the brew image
 # And enable
