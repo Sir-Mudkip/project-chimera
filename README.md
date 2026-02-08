@@ -1,3 +1,8 @@
+# What is Chimera:
+
+WIP Headless image with the option to boot with gnome.
+
+
 # finpilot
 
 A template for building custom bootc operating system images based on the lessons from [Universal Blue](https://universal-blue.org/) and [Bluefin](https://projectbluefin.io). It is designed to be used manually, but is optimized to be bootstraped by GitHub Copilot. After set up you'll have your own custom Linux. 
