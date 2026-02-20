@@ -17,19 +17,27 @@ source /ctx/build/copr-helpers.sh
 shopt -s nullglob
 
 echo "::endgroup::"
-
 echo "::group:: Copy Custom Files"
 
 # Copy Brewfiles to standard location
 mkdir -p /usr/share/ublue-os/homebrew/
+cp /ctx/custom/brew/*.Brewfile /usr/share/ublue-os/homebrew/
 
 # Consolidate Just Files
 mkdir -p /usr/share/ublue-os/just
 find /ctx/custom/ujust -iname '*.just' -exec printf "\n\n" \; -exec cat {} \; >> /usr/share/ublue-os/just/60-custom.just
 
-# Copy Flatpak preinstall files
-mkdir -p /etc/flatpak/preinstall.d/
-cp /ctx/custom/flatpaks/*.preinstall /etc/flatpak/preinstall.d/
+# Copy Welcome Message
+mkdir -p /etc/profile.d/
+mkdir -p /etc/misc.d/
+cp /ctx/custom/system/welcome.sh /etc/profile.d/
+cp /ctx/custom/system/ript-welcome.md /etc/misc.d/
+chmod 644 /etc/misc.d/ript-welcome.md
+chmod 755 /etc/profile.d/welcome.sh
+
+# Copy Colour Prompt
+mkdir -p /etc/bashrc.d/
+cp /ctx/custom/system/color-prompt.sh /etc/bashrc.d/
 
 echo "::endgroup::"
 

@@ -1,0 +1,8 @@
+flatpak "app.devsuite.Ptyxis"
+flatpak "org.mozilla.firefox"
+flatpak "org.wireshark.Wireshark"
+flatpak "com.vscodium.codium"
+flatpak "com.github.tchx84.Flatseal"
+flatpak "org.gnome.Extensions"
+flatpak "io.github.kolunmi.Bazaar"
+flatpak "me.iepure.devtoolbox"

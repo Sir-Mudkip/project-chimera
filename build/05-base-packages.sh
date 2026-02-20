@@ -13,19 +13,13 @@ set -eoux pipefail
 # shellcheck source=/dev/null
 source /ctx/build/copr-helpers.sh
 
+echo "::group:: Configure Repos"
 # Install repos needed for EPEL and Tailscale
 # Install EPEL repository
 dnf install -y epel-release
-
-# Update package cache
-dnf update -y
-
-# Enable CRB (CodeReady Builder) for development packages
 dnf config-manager --set-enabled crb
-
-# For Tailscale, add their official repo
 dnf config-manager --add-repo https://pkgs.tailscale.com/stable/centos/10/tailscale.repo
-
+dnf update -y
 echo "::endgroup::"
 
 echo "::group:: Install Packages"
@@ -36,14 +30,12 @@ echo "::group:: Install Packages"
 # Base packages from Fedora repos - common to all versions
 # https://github.com/ublue-os/main/blob/main/packages.json
 FEDORA_PACKAGES=(
-    bash-color-prompt
     curl
     fastfetch
     gcc
     gocryptfs
     git
     just
-    lm_sensors
     make
     neovim
     python3-pip
@@ -51,6 +43,7 @@ FEDORA_PACKAGES=(
     stress-ng
     wireguard-tools
     podman
+    podman-compose
     gum
     tailscale
     tmux
@@ -59,7 +52,7 @@ FEDORA_PACKAGES=(
     cockpit-podman
     cockpit-selinux
     cockpit-machines
-    wireshark
+    xrdp
 )
 
 # Install all Fedora packages (bulk - safe from COPR injection)
@@ -81,16 +74,6 @@ EXCLUDED_PACKAGES=(
     podman-docker
 )
 
-# Remove excluded packages if they are installed
-if [[ "${#EXCLUDED_PACKAGES[@]}" -gt 0 ]]; then
-    readarray -t INSTALLED_EXCLUDED < <(rpm -qa --queryformat='%{NAME}\n' "${EXCLUDED_PACKAGES[@]}" 2>/dev/null || true)
-    if [[ "${#INSTALLED_EXCLUDED[@]}" -gt 0 ]]; then
-        dnf -y remove "${INSTALLED_EXCLUDED[@]}"
-    else
-        echo "No excluded packages found to remove."
-    fi
-fi
-
 echo "::endgroup::"
 
 # Gnome install
@@ -108,5 +91,6 @@ dnf -y install \
 # Flatpak
 echo "::group:: Flatpak Config"
 dnf install -y flatpak
-flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+flatpak remote-add --system --if-not-exists flathub \
+    https://dl.flathub.org/repo/flathub.flatpakrepo
 echo "::endgroup::"

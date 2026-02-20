@@ -1,4 +1,10 @@
 #!/usr/bin/bash
+set -eoux pipefail
+
+mask_service() {
+    systemctl disable "$1" 2>/dev/null || true
+    systemctl mask "$1" 2>/dev/null || true
+}
 
 echo "::group:: System Configuration"
 
@@ -6,10 +12,10 @@ echo "::group:: System Configuration"
 # systemctl enable podman.socket
 # Example: systemctl mask unwanted-service
 systemctl --global enable podman-auto-update.timer
+systemctl enable sshd.service
+systemctl enable tailscaled.service
 
 echo "Disabling print services"
-systemctl disable cups.socket
-systemctl mask cups.socket
 systemctl disable cups.service
 systemctl mask cups.service
 systemctl disable cups-browsed.service
@@ -36,8 +42,5 @@ systemctl mask sssd-kcm.socket
 echo "Disabling the location service"
 systemctl disable geoclue.service
 systemctl mask geoclue.service
-
-echo "Configuring Wireshark Usergroups"
-usermod -a -G wireshark pentest
 
 echo "::endgroup::"
