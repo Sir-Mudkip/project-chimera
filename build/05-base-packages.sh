@@ -14,12 +14,7 @@ set -eoux pipefail
 source /ctx/build/copr-helpers.sh
 
 echo "::group:: Configure Repos"
-# Install repos needed for EPEL and Tailscale
-# Install EPEL repository
-dnf install -y epel-release
-dnf config-manager --set-enabled crb
 dnf config-manager --add-repo https://pkgs.tailscale.com/stable/centos/10/tailscale.repo
-dnf update -y
 echo "::endgroup::"
 
 echo "::group:: Install Packages"

@@ -21,7 +21,7 @@ FROM scratch AS ctx
 COPY build /build
 COPY custom /custom
 
-FROM quay.io/centos-bootc/centos-bootc:stream10 AS base
+FROM quay.io/fedora/fedora-bootc:latest AS base
 
 ### /opt
 ## Some bootable images, like Fedora, have /opt symlinked to /var/opt, in order to
