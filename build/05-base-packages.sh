@@ -14,7 +14,7 @@ set -eoux pipefail
 source /ctx/build/copr-helpers.sh
 
 echo "::group:: Configure Repos"
-dnf config-manager --add-repo https://pkgs.tailscale.com/stable/centos/10/tailscale.repo
+dnf config-manager addrepo --from-repofile=https://pkgs.tailscale.com/stable/fedora/tailscale.repo
 echo "::endgroup::"
 
 echo "::group:: Install Packages"
