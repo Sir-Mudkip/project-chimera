@@ -8,8 +8,8 @@
 # Install Flatpaks
 [group('Apps')]
 install-flatpaks:
-   #!/usr/bin/env bash
-   brew bundle --file=/usr/share/ublue-os/homebrew/flatpaks.Brewfile
+    #!/usr/bin/env bash
+    brew bundle --file=/usr/share/ublue-os/homebrew/flatpaks.Brewfile
 
 # Install a Flatpak application from Flathub
 [group('Apps')]
