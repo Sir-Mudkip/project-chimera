@@ -48,6 +48,7 @@ FEDORA_PACKAGES=(
     cockpit-podman
     cockpit-selinux
     cockpit-machines
+    xrdp
 )
 
 # Install all Fedora packages (bulk - safe from COPR injection)
