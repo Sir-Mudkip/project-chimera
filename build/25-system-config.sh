@@ -8,39 +8,37 @@ mask_service() {
 
 echo "::group:: System Configuration"
 
-# Enable/disable systemd services
-# systemctl enable podman.socket
-# Example: systemctl mask unwanted-service
-systemctl --global enable podman-auto-update.timer
+echo "Setting headless boot as default"
+systemctl set-default multi-user.target
+
+echo "Enabling remote access services"
 systemctl enable sshd.service
 systemctl enable tailscaled.service
 
+echo "Enabling podman auto-update"
+systemctl --global enable  podman-auto-update.timer
+
+echo "Disabling GDM to prevent GNOME loading on boot"
+mask_service gdm.service
+
 echo "Disabling print services"
-systemctl disable cups.service
-systemctl mask cups.service
-systemctl disable cups-browsed.service
-systemctl mask cups-browsed.service
+mask_service cups.socket
+mask_service cups.service
+mask_service cups-browsed.service
 
 echo "Disabling avahi-daemon"
-systemctl disable avahi-daemon.socket
-systemctl mask avahi-daemon.socket
-systemctl disable avahi-daemon.service
-systemctl mask avahi-daemon.service
+mask_service avahi-daemon.socket
+mask_service avahi-daemon.service
 
-echo "Disabling the modem manager"
-systemctl disable ModemManager.service
-systemctl mask ModemManager.service
+echo "Disabling modem manager"
+mask_service ModemManager.service
 
-echo "Disabling the sssd daemons"
-systemctl disable sssd.service
-systemctl mask sssd.service
-systemctl disable sssd-kcm.service
-systemctl mask sssd-kcm.service
-systemctl disable sssd-kcm.socket
-systemctl mask sssd-kcm.socket
+echo "Disabling sssd daemons"
+mask_service sssd.service
+mask_service sssd-kcm.service
+mask_service sssd-kcm.socket
 
-echo "Disabling the location service"
-systemctl disable geoclue.service
-systemctl mask geoclue.service
+echo "Disabling location service"
+mask_service geoclue.service
 
 echo "::endgroup::"
