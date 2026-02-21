@@ -34,8 +34,8 @@ if [[ ! -d "$REPOS_DIR" ]]; then
     exit 0
 fi
 
-echo "Checking CentOS repos..."
-for repo in "$REPOS_DIR"/centos*.repo; do
+echo "Checking Fedora repos..."
+for repo in "$REPOS_DIR"/fedora*.repo; do
     [[ -f "$repo" ]] && check_repo_file "$repo"
 done
 

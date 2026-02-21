@@ -25,7 +25,6 @@ echo "::group:: Install Packages"
 # Base packages from Fedora repos - common to all versions
 # https://github.com/ublue-os/main/blob/main/packages.json
 FEDORA_PACKAGES=(
-    curl
     fastfetch
     gcc
     gocryptfs

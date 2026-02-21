@@ -37,7 +37,7 @@ chmod 755 /etc/profile.d/welcome.sh
 
 # Copy Colour Prompt
 mkdir -p /etc/bashrc.d/
-cp /ctx/custom/system/color-prompt.sh /etc/bashrc.d/
+cp /ctx/custom/system/bash-color-prompt.sh /etc/bashrc.d/
 
 echo "::endgroup::"
 
