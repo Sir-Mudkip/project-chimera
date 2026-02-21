@@ -14,6 +14,7 @@ set -eoux pipefail
 source /ctx/build/copr-helpers.sh
 
 echo "::group:: Configure Repos"
+curl -o /etc/yum.repos.d/tailscale.repo https://pkgs.tailscale.com/stable/fedora/tailscale.repo
 dnf config-manager addrepo --from-repofile=https://pkgs.tailscale.com/stable/fedora/tailscale.repo
 echo "::endgroup::"
 
@@ -47,7 +48,6 @@ FEDORA_PACKAGES=(
     cockpit-podman
     cockpit-selinux
     cockpit-machines
-    xrdp
 )
 
 # Install all Fedora packages (bulk - safe from COPR injection)
@@ -76,7 +76,6 @@ echo "::group:: Installing gnome so it's 'just there'"
 dnf -y install \
     gnome-shell \
     gdm \
-    gnome-system-monitor \
     gnome-tweaks \
     gnome-control-center \
     nautilus \
