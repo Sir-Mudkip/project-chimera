@@ -81,10 +81,12 @@ enable-gui:
     sudo systemctl enable gdm.service
     sudo systemctl enable xrdp.service
     sudo systemctl enable xrdp-sesman.service
+    sudo systemctl enable tailscaled.service
     echo "Starting GNOME now..."
     sudo systemctl isolate graphical.target
     sudo systemctl start xrdp.service
     sudo systemctl start xrdp-sesman.service
+    sudo systemctl start tailscaled.service
     echo "✓ GNOME is now active and set as default"
     echo "✓ RDP available on port 3389"
 

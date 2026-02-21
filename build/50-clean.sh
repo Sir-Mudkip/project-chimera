@@ -20,8 +20,8 @@ for repo in tailscale epel epel-cisco-openh264; do
     fi
 done
 
-# Disable all CentOS repos
-for i in /etc/yum.repos.d/centos*.repo; do
+# Disable all fedora repos
+for i in /etc/yum.repos.d/fedora*.repo; do
     if [[ -f "$i" ]]; then
         sed -i 's@enabled=1@enabled=0@g' "$i"
     fi

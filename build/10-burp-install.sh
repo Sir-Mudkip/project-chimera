@@ -6,7 +6,7 @@ mkdir -p /tmp/burp
 curl --output /tmp/burp/burp_pro_install.sh \
     "https://portswigger.net/burp/releases/download?product=pro&version=2026.1.2&type=Linux"
 chmod +x /tmp/burp/burp_pro_install.sh
-/tmp/burp/burp_pro_install.sh -dir /opt/BurpSuitePro
+echo "o" | /tmp/burp/burp_pro_install.sh -dir /opt/BurpSuitePro
 chmod -R 755 /opt/BurpSuitePro
 echo "::endgroup::"
 
