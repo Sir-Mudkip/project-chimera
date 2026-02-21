@@ -15,7 +15,6 @@ source /ctx/build/copr-helpers.sh
 
 echo "::group:: Configure Repos"
 curl -o /etc/yum.repos.d/tailscale.repo https://pkgs.tailscale.com/stable/fedora/tailscale.repo
-dnf config-manager addrepo --from-repofile=https://pkgs.tailscale.com/stable/fedora/tailscale.repo
 echo "::endgroup::"
 
 echo "::group:: Install Packages"
