@@ -13,7 +13,7 @@ echo "::group:: System Configuration"
 # Example: systemctl mask unwanted-service
 systemctl --global enable podman-auto-update.timer
 systemctl enable sshd.service
-systemctl enable --now tailscaled.service
+systemctl enable tailscaled.service
 
 echo "Disabling print services"
 systemctl disable cups.service
