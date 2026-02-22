@@ -14,7 +14,6 @@
 # custom image's identity. When changing it, update all references above
 # to maintain consistency.
 ###############################################################################
-ARG PASSWORD_HASH
 
 # Context stage - combine local and imported OCI container resources
 FROM scratch AS ctx
@@ -23,6 +22,8 @@ COPY build /build
 COPY custom /custom
 
 FROM quay.io/fedora/fedora-bootc:latest AS base
+
+ARG PASSWORD_HASH
 
 ### /opt
 ## Some bootable images, like Fedora, have /opt symlinked to /var/opt, in order to
