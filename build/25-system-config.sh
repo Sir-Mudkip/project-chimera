@@ -75,6 +75,8 @@ After=local-fs.target
 [Service]
 Type=oneshot
 ExecStart=/usr/sbin/mkhomedir_helper pentest
+ExecStartPost=/usr/bin/cp -n /etc/skel/.bashrc /var/home/pentest/.bashrc
+ExecStartPost=/usr/bin/chown pentest:pentest /var/home/pentest/.bashrc
 ExecStartPost=/usr/bin/touch /var/home/pentest/.setup-done
 RemainAfterExit=yes
 
@@ -83,13 +85,5 @@ WantedBy=multi-user.target
 EOF
 
 systemctl enable pentest-home-setup.service
-
-# Source Bashrc.d for bash color prompt
-cat >> /etc/bashrc << 'EOF'
-# Source bashrc.d scripts
-for script in /etc/bashrc.d/*.sh; do
-    [ -r "$script" ] && source "$script"
-done
-EOF
 
 echo "::endgroup::"

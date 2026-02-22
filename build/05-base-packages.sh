@@ -25,6 +25,7 @@ echo "::group:: Install Packages"
 # Base packages from Fedora repos - common to all versions
 # https://github.com/ublue-os/main/blob/main/packages.json
 FEDORA_PACKAGES=(
+    bash-color-prompt
     fastfetch
     flatpak
     gcc
@@ -52,6 +53,7 @@ FEDORA_PACKAGES=(
     gdm
     gnome-tweaks
     gnome-control-center
+    ptyxis
     nautilus
     NetworkManager-wifi
     NetworkManager-openvpn-gnome

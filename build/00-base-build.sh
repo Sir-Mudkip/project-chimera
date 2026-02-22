@@ -42,10 +42,6 @@ cp /ctx/custom/system/ript-welcome.md /etc/misc.d/
 chmod 644 /etc/misc.d/ript-welcome.md
 chmod 755 /etc/profile.d/welcome.sh
 
-# Copy Colour Prompt
-mkdir -p /etc/bashrc.d/
-cp /ctx/custom/system/bash-color-prompt.sh /etc/bashrc.d/
-
 echo "::endgroup::"
 
 echo "::group:: Building Image..."

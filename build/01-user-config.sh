@@ -3,7 +3,7 @@
 set -euox pipefail
 
 echo "Creating Pentesting User"
-useradd -M -d /var/home/pentest -G wheel -s /bin/bash pentest
+useradd -m -d /var/home/pentest -G wheel -s /bin/bash pentest
 if [ -n "${PASSWORD_HASH:-}" ]; then
     usermod -p "${PASSWORD_HASH}" pentest
     echo "Password hash set from build argument"

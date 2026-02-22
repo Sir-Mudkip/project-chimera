@@ -1,4 +1,3 @@
-flatpak "app.devsuite.Ptyxis"
 flatpak "org.mozilla.firefox"
 flatpak "org.wireshark.Wireshark"
 flatpak "com.vscodium.codium"

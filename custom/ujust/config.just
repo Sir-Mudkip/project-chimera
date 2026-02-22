@@ -48,11 +48,14 @@ configure-env:
     # auto screen lock disable
     dconf write /org/gnome/desktop/screensaver/lock-enabled false
 
+    # added ptyxis as login shell
+    dconf write /org/gnome/Ptyxis/login-shell true
+
     # shortcuts for terminal and vscodium
     dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/']"
     dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/name "'Ptyxis'"
     dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/binding "'<Control><Alt>t'"
-    dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/command "'flatpak run app.devsuite.Ptyxis --new-window'"
+    dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/command "'/usr/bin/ptyxis --new-window'"
     dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/name "'vscodium'"
     dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/binding "'<Control><Alt>v'"
     dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/command "'flatpak run com.vscodium.codium'"
@@ -63,6 +66,12 @@ configure-env:
     # Add minimise button to apps
     gsettings set org.gnome.desktop.wm.preferences button-layout ':minimize,maximize,close' 
 
+    # Keyboard layout
+    dconf write /org/gnome/desktop/input-sources/sources "[('xkb', 'gb')]"
+
+[group('System')]
+enable-gui:
+    #!/usr/bin/env bash
     # Enable and start GNOME Desktop	
     echo "Enabling GNOME Desktop..."
     sudo systemctl unmask gdm.service
