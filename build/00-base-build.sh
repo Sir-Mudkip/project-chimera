@@ -27,6 +27,13 @@ cp /ctx/custom/brew/*.Brewfile /usr/share/ublue-os/homebrew/
 mkdir -p /usr/share/ublue-os/just
 find /ctx/custom/ujust -iname '*.just' -exec printf "\n\n" \; -exec cat {} \; >> /usr/share/ublue-os/just/60-custom.just
 
+# Create ujust wrapper
+cat > /usr/bin/ujust << 'EOF'
+#!/usr/bin/bash
+just --justfile /usr/share/ublue-os/just/60-custom.just "$@"
+EOF
+chmod +x /usr/bin/ujust
+
 # Copy Welcome Message
 mkdir -p /etc/profile.d/
 mkdir -p /etc/misc.d/

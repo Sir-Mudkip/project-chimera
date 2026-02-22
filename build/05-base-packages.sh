@@ -26,6 +26,7 @@ echo "::group:: Install Packages"
 # https://github.com/ublue-os/main/blob/main/packages.json
 FEDORA_PACKAGES=(
     fastfetch
+    flatpak
     gcc
     gocryptfs
     git
@@ -46,6 +47,13 @@ FEDORA_PACKAGES=(
     cockpit-selinux
     cockpit-machines
     xrdp
+    gnome-shell
+    gdm
+    gnome-tweaks
+    gnome-control-center
+    nautilus
+    NetworkManager-wifi
+    NetworkManager-openvpn-gnome
 )
 
 # Install all Fedora packages (bulk - safe from COPR injection)
@@ -64,25 +72,7 @@ EXCLUDED_PACKAGES=(
     firefox-langpacks
     gnome-extensions-app
     gnome-software-rpm-ostree
+    gnome-software
     podman-docker
 )
-
-echo "::endgroup::"
-
-# Gnome install
-echo "::group:: Installing gnome so it's 'just there'"
-dnf -y install \
-    gnome-shell \
-    gdm \
-    gnome-tweaks \
-    gnome-control-center \
-    nautilus \
-    NetworkManager-wifi \
-    NetworkManager-openvpn-gnome
-
-# Flatpak
-echo "::group:: Flatpak Config"
-dnf install -y flatpak
-flatpak remote-add --system --if-not-exists flathub \
-    https://dl.flathub.org/repo/flathub.flatpakrepo
 echo "::endgroup::"

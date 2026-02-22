@@ -117,6 +117,8 @@ jobs:
           tags: ${{ env.DEFAULT_TAG }}
           labels: ${{ steps.metadata.outputs.labels }}
           oci: false
+          build-args: |
+            PASSWORD_HASH=${{ secrets.PASSWORD_HASH }}
 
       # Tag for registry
       - name: Tag for registry

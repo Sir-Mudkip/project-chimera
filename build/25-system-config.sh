@@ -41,4 +41,47 @@ mask_service sssd-kcm.socket
 echo "Disabling location service"
 mask_service geoclue.service
 
+# Work around for flatpak installs for the time being
+cat > /usr/lib/systemd/system/flathub-setup.service << 'EOF'
+[Unit]
+Description=Setup Flathub remote
+ConditionPathExists=!/var/lib/flatpak/repo/flathub.trustedkeys.gpg
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/flatpak remote-add --system flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl enable flathub-setup.service
+
+# First boot user home directory
+echo "Configuring home directory creation on first boot"
+cat > /usr/lib/tmpfiles.d/pentest-home.conf << 'EOF'
+d /var/home/pentest 0700 pentest pentest -
+EOF
+
+cat > /usr/lib/systemd/system/pentest-home-setup.service << 'EOF'
+[Unit]
+Description=Setup pentest user home directory
+ConditionPathExists=!/var/home/pentest/.setup-done
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/mkhomedir_helper pentest
+ExecStartPost=/usr/bin/touch /var/home/pentest/.setup-done
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl enable pentest-home-setup.service
+
 echo "::endgroup::"

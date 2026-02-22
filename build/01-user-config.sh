@@ -26,27 +26,4 @@ ExecStart=
 ExecStart=-/sbin/agetty -a pentest --noclear %I $TERM
 EOF
 
-echo "Configuring home directory creation on first boot"
-cat > /usr/lib/tmpfiles.d/pentest-home.conf << 'EOF'
-d /var/home/pentest 0700 pentest pentest -
-EOF
-
-cat > /usr/lib/systemd/system/pentest-home-setup.service << 'EOF'
-[Unit]
-Description=Setup pentest user home directory
-ConditionPathExists=!/var/home/pentest/.setup-done
-After=local-fs.target
-
-[Service]
-Type=oneshot
-ExecStart=/usr/sbin/mkhomedir_helper pentest
-ExecStartPost=/usr/bin/touch /var/home/pentest/.setup-done
-RemainAfterExit=yes
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-systemctl enable pentest-home-setup.service
-
 echo "User configuration complete"
