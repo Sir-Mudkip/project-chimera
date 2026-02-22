@@ -5,12 +5,6 @@
 ## Example application installation commands
 ## These are simplified examples adapted from Bluefin
 
-# Install Flatpaks
-[group('Apps')]
-install-flatpaks:
-    #!/usr/bin/env bash
-    brew bundle --file=/usr/share/ublue-os/homebrew/flatpaks.Brewfile
-
 # Install a Flatpak application from Flathub
 [group('Apps')]
 install-flatpak APP_ID:

@@ -4,14 +4,15 @@
 #######################
 
 [group('System')]
-configure-gnome:
+configure-env:
     #!/usr/bin/env bash
-    if ! systemctl is-active --quiet gdm.service; then
-        echo "GNOME is not running. Run 'ujust enable-gui' first."
-        exit 1
-    fi
     source /usr/lib/ujust/ujust.sh
+    # Installing Flatpaks
+    echo "Installing Flatpak Files"
+    brew bundle --file=/usr/share/ublue-os/homebrew/flatpaks.Brewfile
+
     # workspace shortcuts
+    echo "Configuring Gnome Shortcuts"
     dconf write /org/gnome/desktop/wm/keybindings/move-to-workspace-1 "['<Super><Shift>1']"
     dconf write /org/gnome/desktop/wm/keybindings/move-to-workspace-2 "['<Super><Shift>2']"
     dconf write /org/gnome/desktop/wm/keybindings/move-to-workspace-3 "['<Super><Shift>3']"
@@ -62,21 +63,9 @@ configure-gnome:
     # Add minimise button to apps
     gsettings set org.gnome.desktop.wm.preferences button-layout ':minimize,maximize,close' 
 
-    # Making Neovim look nice for Vim Users
-    mkdir -p $HOME/.local/share/nvim/site/pack/plugins/start && \
-    cd $HOME/.local/share/nvim/site/pack/plugins/start && \
-    git clone --depth 1 https://github.com/nvim-lua/plenary.nvim && \
-    git clone --depth 1 https://github.com/nvim-telescope/telescope.nvim && \
-    git clone --depth 1 https://github.com/catppuccin/nvim catppuccin && \
-    git clone --depth 1 https://github.com/nvim-tree/nvim-web-devicons && \
-    git clone --depth 1 https://github.com/nvim-neo-tree/neo-tree.nvim && \
-    git clone --depth 1 https://github.com/MunifTanjim/nui.nvim
-
-# Enable and start GNOME Desktop
-[group('System')]
-enable-gui:
-    #!/usr/bin/env bash
+    # Enable and start GNOME Desktop	
     echo "Enabling GNOME Desktop..."
+    sudo systemctl unmask gdm.service
     sudo systemctl set-default graphical.target
     sudo systemctl enable gdm.service
     sudo systemctl enable xrdp.service

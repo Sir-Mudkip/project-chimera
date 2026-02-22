@@ -1,10 +1,8 @@
 # Welcome to the RIPT
 
-Please run the following commands in order:
+Please run the following command:
 
-- ujust install-flatpaks
-- ujust enable-gui
-- ujust configure-gnome
+- ujust configure-env
 
 Once complete, please contact the RIPT Admin for next steps.
 

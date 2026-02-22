@@ -84,4 +84,12 @@ EOF
 
 systemctl enable pentest-home-setup.service
 
+# Source Bashrc.d for bash color prompt
+cat >> /etc/bashrc << 'EOF'
+# Source bashrc.d scripts
+for script in /etc/bashrc.d/*.sh; do
+    [ -r "$script" ] && source "$script"
+done
+EOF
+
 echo "::endgroup::"
