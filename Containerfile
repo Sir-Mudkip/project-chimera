@@ -14,6 +14,7 @@
 # custom image's identity. When changing it, update all references above
 # to maintain consistency.
 ###############################################################################
+ARG PASSWORD_HASH
 
 # Context stage - combine local and imported OCI container resources
 FROM scratch AS ctx
