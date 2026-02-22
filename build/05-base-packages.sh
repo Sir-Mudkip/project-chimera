@@ -36,7 +36,6 @@ FEDORA_PACKAGES=(
     ripgrep
     stress-ng
     wireguard-tools
-    podman
     podman-compose
     gum
     tailscale

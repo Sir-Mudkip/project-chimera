@@ -1,3 +1,3 @@
 #!/usr/bin/bash
 # Welcome message for first boot
-cat /etc/ript-welcome.md
+cat /etc/misc.d/ript-welcome.md
