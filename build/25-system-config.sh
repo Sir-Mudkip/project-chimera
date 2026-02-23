@@ -74,6 +74,8 @@ After=local-fs.target systemd-tmpfiles-setup.service
 [Service]
 Type=oneshot
 ExecStart=/usr/sbin/mkhomedir_helper pentest
+ExecStartPost=/usr/bin/cp -n /etc/skel/.bashrc /var/home/pentest/.bashrc
+ExecStartPost=/usr/bin/chown pentest:pentest /var/home/pentest/.bashrc
 ExecStartPost=/usr/bin/touch /var/home/pentest/.setup-done
 RemainAfterExit=yes
 
