@@ -1,12 +1,11 @@
 # vim: set ft=make :
 #######################
-### vm-config.just
+### config.just
 #######################
 
 [group('System')]
-configure-env:
+configure-gui:
     #!/usr/bin/env bash
-    source /usr/lib/ujust/ujust.sh
     # Installing Flatpaks
     echo "Installing Flatpak Files"
     brew bundle --file=/usr/share/ublue-os/homebrew/flatpaks.Brewfile
@@ -66,8 +65,17 @@ configure-env:
     # Add minimise button to apps
     gsettings set org.gnome.desktop.wm.preferences button-layout ':minimize,maximize,close' 
 
-    # Keyboard layout
-    dconf write /org/gnome/desktop/input-sources/sources "[('xkb', 'gb')]"
+[group('System')]
+configure-services:
+    #!/usr/bin/env bash
+    echo "Configuring network services..."
+    sudo systemctl enable --now tailscaled.service
+
+    echo "=== Cockpit ==="
+    sudo systemctl enable --now cockpit.socket
+    echo "✓ Cockpit available at https://localhost:9090"
+
+    echo "✓ Services configured"
 
 [group('System')]
 enable-gui:
@@ -79,12 +87,10 @@ enable-gui:
     sudo systemctl enable gdm.service
     sudo systemctl enable xrdp.service
     sudo systemctl enable xrdp-sesman.service
-    sudo systemctl enable tailscaled.service
     echo "Starting GNOME now..."
     sudo systemctl isolate graphical.target
     sudo systemctl start xrdp.service
     sudo systemctl start xrdp-sesman.service
-    sudo systemctl start tailscaled.service
     echo "✓ GNOME is now active and set as default"
     echo "✓ RDP available on port 3389"
 

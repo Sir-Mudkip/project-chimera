@@ -15,15 +15,4 @@ echo "setting up wheel group"
 echo "%wheel ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/wheel-nopasswd
 chmod 0440 /etc/sudoers.d/wheel-nopasswd
 
-echo "Setting hostame"
-echo "ript" > /etc/hostname
-
-# Set pentest as the default user for console login
-mkdir -p /etc/systemd/system/getty@tty1.service.d
-cat > /etc/systemd/system/getty@tty1.service.d/autologin.conf << 'EOF'
-[Service]
-ExecStart=
-ExecStart=-/sbin/agetty -a pentest --noclear %I $TERM
-EOF
-
 echo "User configuration complete"

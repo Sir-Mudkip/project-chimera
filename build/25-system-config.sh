@@ -13,7 +13,6 @@ systemctl set-default multi-user.target
 
 echo "Enabling remote access services"
 systemctl enable sshd.service
-systemctl enable tailscaled.service
 
 echo "Enabling podman auto-update"
 systemctl --global enable  podman-auto-update.timer
@@ -70,13 +69,11 @@ cat > /usr/lib/systemd/system/pentest-home-setup.service << 'EOF'
 [Unit]
 Description=Setup pentest user home directory
 ConditionPathExists=!/var/home/pentest/.setup-done
-After=local-fs.target
+After=local-fs.target systemd-tmpfiles-setup.service
 
 [Service]
 Type=oneshot
 ExecStart=/usr/sbin/mkhomedir_helper pentest
-ExecStartPost=/usr/bin/cp -n /etc/skel/.bashrc /var/home/pentest/.bashrc
-ExecStartPost=/usr/bin/chown pentest:pentest /var/home/pentest/.bashrc
 ExecStartPost=/usr/bin/touch /var/home/pentest/.setup-done
 RemainAfterExit=yes
 
@@ -85,5 +82,14 @@ WantedBy=multi-user.target
 EOF
 
 systemctl enable pentest-home-setup.service
+
+echo "Setting UK ISO keyboard layout"
+echo "KEYMAP=uk" > /etc/vconsole.conf
+mkdir -p /etc/dconf/db/local.d
+cat > /etc/dconf/db/local.d/00-keyboard << 'EOF'
+[org/gnome/desktop/input-sources]
+sources=[('xkb', 'gb')]
+EOF
+dconf update
 
 echo "::endgroup::"

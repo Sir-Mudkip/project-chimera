@@ -1,13 +1,14 @@
 # Welcome to the RIPT
 
-Please run the following command:
+Please run the following commands:
 
-- ujust configure-env
+- ujust configure-services  (Tailscale, Cockpit)
 
 Once complete, please contact the RIPT Admin for next steps.
 
-Optionally enable the GUI with the below:
+If a GUI is required, then please enable:
 
+- ujust configure-gui       (GNOME settings & flatpaks)
 - ujust enable-gui
 
 Hide this message with:

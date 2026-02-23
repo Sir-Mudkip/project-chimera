@@ -27,13 +27,11 @@ chmod 644 /usr/share/applications/burpsuite.desktop
 ln -sf /opt/BurpSuitePro/BurpSuitePro /usr/bin/burpsuite
 echo "::endgroup::"
 
-echo "::group:: Burp Suite User Config"
-mkdir -p /var/home/pentest/Desktop
-cp /usr/share/applications/burpsuite.desktop /var/home/pentest/Desktop/burpsuite.desktop
-chmod +x /var/home/pentest/Desktop/burpsuite.desktop
-chown -R pentest:pentest /var/home/pentest/Desktop
-mkdir -p /var/home/pentest/.BurpSuite
-chown -R pentest:pentest /var/home/pentest/.BurpSuite
+echo "::group:: Burp Suite Skel Config"
+mkdir -p /etc/skel/Desktop
+cp /usr/share/applications/burpsuite.desktop /etc/skel/Desktop/burpsuite.desktop
+chmod +x /etc/skel/Desktop/burpsuite.desktop
+mkdir -p /etc/skel/.BurpSuite
 echo "::endgroup::"
 
 rm -rf /tmp/burp
